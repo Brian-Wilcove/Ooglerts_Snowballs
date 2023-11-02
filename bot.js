@@ -1,16 +1,18 @@
-// initialize the dotenv
 const dotenv = require('dotenv');
 dotenv.config();
+
 const fs = require('node:fs');
 const path = require('node:path');
-// Require the necessary discord.js classes
+
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-// Create a new client instance
+
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-//The Collection class extends JavaScript's native Map class, and includes more extensive, useful functionality. Collection is used to store and efficiently retrieve commands for execution.
+
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
+
+client.cooldowns = new Collection();
 
 for (const folder of commandFolders) {
 	const commandsPath = path.join(foldersPath, folder);
