@@ -10,6 +10,8 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const cron = require('node-cron');
 
+const {dailyMessage} = require('./cron/ranked_ranking.js')
+
 client.commands = new Collection();
 client.cooldowns = new Collection();
 
@@ -46,16 +48,7 @@ for (const file of eventFiles) {
 // Log in to Discord with your client's token
 client.login(process.env.token);
 
-
-
 cron.schedule('0-59 * * * * *', () => {
-	dailyMessage();
+	dailyMessage(client);
 });
 
-async function dailyMessage(){
-	const guild = client.guilds.cache.get(process.env.guildId);
-	const channel = guild.channels.cache.get(process.env.channelId);
-	const response = await fetch("https://fakerapi.it/api/v1/addresses?_quantity=1&_locale=en_US");
-	const test = await response.json();
-	channel.send(test.data[0].street);
-}
