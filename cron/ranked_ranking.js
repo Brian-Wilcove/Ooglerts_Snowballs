@@ -7,11 +7,11 @@ const riotHeaders = new Headers({
 const dailyMessage = async (client)=> {
 	const guild = client.guilds.cache.get(process.env.guildId);
 	const channel = guild.channels.cache.get(process.env.channelId);
-	const names = await Promise.all(users.map(async (user) => {
-		test = await getPuuid(user);
-		return test
+	const puuids = await Promise.all(users.map(async (user) => {
+		puuid = await getPuuid(user);
+		return puuid;
 	  }));
-	console.log(names);
+	
 }
 
 async function getPuuid(summonerId){
@@ -23,5 +23,15 @@ async function getPuuid(summonerId){
 	puuid = Data.puuid;
 	return puuid;
 }
+
+async function getTodaysMatchIds(puuid){
+    const response = await fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?startTime=${epocDate}&start=0&count=100`, {
+	method: "GET",
+	headers: riotHeaders
+	})
+	const Data = await response.json();
+    return Data
+}
+
 
 module.exports = { dailyMessage }
